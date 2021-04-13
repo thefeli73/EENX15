@@ -55,6 +55,7 @@ int temp;
 #define encoderA2 4
 #define encoderB2 7
 volatile int countA = 0;
+volatile int countAold = 0;
 volatile int countB = 0;
 
 const int MotorPinA = 12;
@@ -74,6 +75,8 @@ unsigned int rpmA;
 unsigned int rpmB;
 unsigned long timeoldA;
 unsigned long timeoldB;
+float rpm = 0;
+float rps = 0;
 
 void setup() {
   Wire.begin();
@@ -115,6 +118,15 @@ void loop() {
     lastPrintTime = m;
     printInfo();
   }
+}
+void getSpeed() {
+  float alpha = 2.0 / (20.0 + 1.0); //alfa aka EMA length. 10 length = 20*20ms=0.2s
+  int ticks = countA-countAold;
+  float rpm_new = ticks*50*60/56.0; //ticks * 50 hz * 60s / ticks per rotation
+  float rps_new = ticks*50/8.91; //ticks * 50hz/ ticks per rad  
+  rpm = rpm*(1-alpha)+rpm_new*alpha;
+  rps = rps*(1-alpha)+rps_new*alpha;
+  countAold = countA;
 }
 void printInfo(){
   Serial.println("");
