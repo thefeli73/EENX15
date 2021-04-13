@@ -94,21 +94,12 @@ void setup() {
   pinMode(MotorPinB, OUTPUT);
   pinMode(MotorSpeedB, OUTPUT);
   pinMode(MotorBrakeB, OUTPUT);
-
-  half_revolutionsA = 0;
-  rpmA = 0;
-  timeoldA = 0;
-  
-  half_revolutionsB = 0;
-  rpmB = 0;
-  timeoldB = 0;
 }
-
+ 
 void loop() {
   gyro_loop();
-  
   safe_angle = int(round(angle_pitch_output));
-  
+
   if(temp_loops>250){
     Serial.println("");
     Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);

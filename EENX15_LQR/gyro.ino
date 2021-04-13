@@ -79,6 +79,14 @@ void gyro_setup(){
   delay(100);
 
   calibrateGyro();
+  
+  half_revolutionsA = 0;
+  rpmA = 0;
+  timeoldA = 0;
+  
+  half_revolutionsB = 0;
+  rpmB = 0;
+  timeoldB = 0;
 }
 
 void gyro_loop(){
