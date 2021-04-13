@@ -45,6 +45,14 @@ long loop_timer;
 int temp;
 
 //motor stuff
+#define encoderA1 2
+#define encoderB1 3
+
+#define encoderA2 4
+#define encoderB2 7
+volatile int countA = 0;
+volatile int countB = 0;
+
 const int MotorPinA = 12;
 const int MotorSpeedA = 3;
 const int MotorBrakeA = 9;
@@ -72,6 +80,13 @@ void setup() {
   gyro_setup();
   
   //motor
+  pinMode(encoderA1, INPUT_PULLUP);
+  pinMode(encoderB1, INPUT_PULLUP);
+  pinMode(encoderA2, INPUT_PULLUP);
+  pinMode(encoderB2, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(encoderA1), pulseA, RISING);
+  //attachInterrupt(digitalPinToInterrupt(encoderB1), pulseB, RISING);
+  
   pinMode(MotorPinA, OUTPUT);
   pinMode(MotorSpeedA, OUTPUT);
   pinMode(MotorBrakeA, OUTPUT);
@@ -80,8 +95,6 @@ void setup() {
   pinMode(MotorSpeedB, OUTPUT);
   pinMode(MotorBrakeB, OUTPUT);
 
-  attachInterrupt(0, magnet_detectA, RISING);
-  //attachInterrupt(1, magnet_detectB, RISING);
   half_revolutionsA = 0;
   rpmA = 0;
   timeoldA = 0;
@@ -96,11 +109,15 @@ void loop() {
   
   safe_angle = int(round(angle_pitch_output));
   
-  if(temp_loops>100){
+  if(temp_loops>250){
     Serial.println("");
     Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);
     Serial.print(" pitch Angle abs = "); Serial.println(abs(safe_angle));
     Serial.print(" pitch Angle measured = "); Serial.println(angle_pitch);
+    Serial.print("Position: "); Serial.println(countA);
+    //Serial.print("A: "); Serial.println(countA);
+    //Serial.print("B: "); Serial.println(countB);
+    
     temp_loops = 0;
   }
   else {
@@ -133,14 +150,28 @@ void loop() {
     analogWrite(MotorSpeedA, speed);
   } 
 }
+int directionA(){
+  if(digitalRead(encoderA2) ==  HIGH){                             
+    return 1;  
+  }
+  else{
+    return -1;
+  }
+}
 
-void magnet_detectA()//This function is called whenever a magnet/interrupt is detected by the arduino
- {
-   half_revolutionsA++;
-   Serial.println("detect");
- }
- void magnet_detectB()//This function is called whenever a magnet/interrupt is detected by the arduino
- {
-   half_revolutionsB++;
-   //Serial.println("detect");
- }
+int directionB(){
+  if(digitalRead(encoderB2) ==  HIGH){                             
+    return 1;  
+  }
+  else{
+    return -1;
+  }
+}
+
+void pulseA(){  
+  countA += directionA();
+}
+
+void pulseB(){  
+  countB += directionB();
+}
