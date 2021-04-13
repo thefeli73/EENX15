@@ -5,7 +5,7 @@
 Adafruit_MPU6050 mpu;
 
 void gyro_setup(){
-  Serial.println("Adafruit MPU6050 test!");
+  Serial.println("Initializing Adafruit MPU6050");
 
   // Try to initialize!
   if (!mpu.begin()) {
