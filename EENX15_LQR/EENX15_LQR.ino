@@ -116,20 +116,22 @@ void loop() {
     printInfo();
   }
 }
-    Serial.println("");
-    Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);
-    Serial.print(" pitch Angle abs = "); Serial.println(abs(safe_angle));
-    Serial.print(" pitch Angle measured = "); Serial.println(angle_pitch);
-    Serial.print("Position: "); Serial.println(countA);
-    //Serial.print("A: "); Serial.println(countA);
-    //Serial.print("B: "); Serial.println(countB);
-    
-    temp_loops = 0;
-  }
-  else {
-    temp_loops++;
-  }
+void printInfo(){
+  Serial.println("");
+  Serial.print("pitch Angle  = "); Serial.println(angle_pitch_output);
+  Serial.print("pitch Angle abs = "); Serial.println(abs(safe_angle));
+  Serial.print("pitch Angle measured = "); Serial.println(angle_pitch);
+  Serial.print("Position: "); Serial.println(countA);
+  Serial.print("Full Rotations: "); Serial.println(countA/56.0); //ca. 56 tick per rotation
+  Serial.print("Rads rotated: "); Serial.println(countA/8.91); //ca. 56 tick per rotation, 6.26 rads per rotation
+  Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
+  Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
   
+  //Serial.print("A: "); Serial.println(countA);
+  //Serial.print("B: "); Serial.println(countB);
+}
+
+void setSpeed(){
   if(abs(safe_angle)<50 ){
     speed = 8*safe_angle;
     if(speed<0){
