@@ -1,5 +1,9 @@
 #include <Wire.h>
 
+
+int lastCorrectionTime = 0;
+int lastPrintTime = 0;
+
 //temporary variable to measure main loops
 int temp_loops;
 
@@ -100,7 +104,18 @@ void loop() {
   gyro_loop();
   safe_angle = int(round(angle_pitch_output));
 
-  if(temp_loops>250){
+  int m = millis();
+  
+  if (m - lastCorrectionTime >= 20) { //run this code ever 20ms (50hz)
+    lastCorrectionTime = m;
+    getSpeed();
+    setSpeed();
+  }
+  if (m - lastPrintTime >= 800) { //run this code ever 800ms (1.25hz)
+    lastPrintTime = m;
+    printInfo();
+  }
+}
     Serial.println("");
     Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);
     Serial.print(" pitch Angle abs = "); Serial.println(abs(safe_angle));
