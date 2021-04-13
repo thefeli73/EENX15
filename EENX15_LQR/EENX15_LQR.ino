@@ -17,8 +17,10 @@ float angularSpeed = 0;
 float motorAngularPosition = 0;
 /** Motor's angular speed */
 float motorAngularSpeed = 0;
-/** PWM signal applied to the motor's driver 400 is 100% cicle and -400 100% but inverse direction */
+
+/** PWM signal applied to the motor's driver 255 is 100% */
 int32_t speed;
+int safe_angle;
 
 
 //gyro stuff
@@ -92,21 +94,21 @@ void setup() {
 void loop() {
   gyro_loop();
   
+  safe_angle = int(round(angle_pitch_output));
+  
   if(temp_loops>100){
     Serial.println("");
     Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);
-    Serial.print(" pitch Angle abs = "); Serial.println(abs(int(round(angle_pitch_output))));
+    Serial.print(" pitch Angle abs = "); Serial.println(abs(safe_angle));
     Serial.print(" pitch Angle measured = "); Serial.println(angle_pitch);
     temp_loops = 0;
   }
   else {
     temp_loops++;
   }
-
-  if(angle_pitch_output!=0 && (abs(angle_pitch_output))<50 ){
-    digitalWrite(MotorBrakeB, LOW);
-    digitalWrite(MotorBrakeA, LOW);
-    if(angle_pitch_output<0){
+  
+  if(safe_angle!=0 && safe_angle<50 ){
+    if(safe_angle<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
     }
@@ -114,20 +116,15 @@ void loop() {
       digitalWrite(MotorPinB, CCW);
       digitalWrite(MotorPinA, CW);
     }
-    if((abs(int(angle_pitch_output))*8 + 30)<250){
-      analogWrite(MotorSpeedB,30 + 8*abs(int(round(angle_pitch_output)))); //Wheel close to connections
-      analogWrite(MotorSpeedA,30 + 8*abs(int(round(angle_pitch_output)))); //First experiment wheel
-    }
-    else{
-      analogWrite(MotorSpeedB,250); //Wheel close to connections
-      analogWrite(MotorSpeedA,250); //First experiment wheel
-    }
+    speed = 30 + 8*abs(safe_angle);
+    speed = constrain(speed, 0, 250);
+    analogWrite(MotorSpeedB, speed); //Wheel close to connections
+    analogWrite(MotorSpeedA, speed); //First experiment wheel
   }
   else{
-    digitalWrite(MotorBrakeB, HIGH);
-    digitalWrite(MotorBrakeA, HIGH);
-    analogWrite(MotorSpeedB,0);
-    analogWrite(MotorSpeedA,0);
+    speed = 0;
+    analogWrite(MotorSpeedB, speed);
+    analogWrite(MotorSpeedA, speed);
   } 
 }
 
