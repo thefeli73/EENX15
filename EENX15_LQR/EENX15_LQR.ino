@@ -107,17 +107,23 @@ void loop() {
     temp_loops++;
   }
   
-  if(safe_angle!=0 && safe_angle<50 ){
-    if(safe_angle<0){
+  if(abs(safe_angle)<50 ){
+    speed = 8*safe_angle;
+    if(speed<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
+      speed -= 30;
     }
-    else{
+    else if(speed>0){
       digitalWrite(MotorPinB, CCW);
       digitalWrite(MotorPinA, CW);
+      speed += 30;
     }
-    speed = 30 + 8*abs(safe_angle);
-    speed = constrain(speed, 0, 250);
+    else {
+      speed = 0;
+    }
+    speed = abs(speed);
+    speed = constrain(speed, 0, 249);
     analogWrite(MotorSpeedB, speed); //Wheel close to connections
     analogWrite(MotorSpeedA, speed); //First experiment wheel
   }
