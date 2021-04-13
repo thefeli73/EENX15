@@ -95,7 +95,7 @@ void loop() {
   if(temp_loops>100){
     Serial.println("");
     Serial.print(" pitch Angle  = "); Serial.println(angle_pitch_output);
-    Serial.print(" pitch Angle abs = "); Serial.println(abs(int(angle_pitch_output)));
+    Serial.print(" pitch Angle abs = "); Serial.println(abs(int(round(angle_pitch_output))));
     Serial.print(" pitch Angle measured = "); Serial.println(angle_pitch);
     temp_loops = 0;
   }
@@ -115,8 +115,8 @@ void loop() {
       digitalWrite(MotorPinA, CW);
     }
     if((abs(int(angle_pitch_output))*8 + 30)<250){
-      analogWrite(MotorSpeedB,30 + 8*abs(int(angle_pitch_output))); //Wheel close to connections
-      analogWrite(MotorSpeedA,30 + 8*abs(int(angle_pitch_output))); //First experiment wheel
+      analogWrite(MotorSpeedB,30 + 8*abs(int(round(angle_pitch_output)))); //Wheel close to connections
+      analogWrite(MotorSpeedA,30 + 8*abs(int(round(angle_pitch_output)))); //First experiment wheel
     }
     else{
       analogWrite(MotorSpeedB,250); //Wheel close to connections
