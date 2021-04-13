@@ -1,3 +1,5 @@
+#include <Wire.h>
+
 //temporary variable to measure main loops
 int temp_loops;
 
@@ -60,6 +62,7 @@ unsigned long timeoldA;
 unsigned long timeoldB;
 
 void setup() {
+  Wire.begin();
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
