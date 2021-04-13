@@ -4,8 +4,6 @@
 int lastCorrectionTime = 0;
 int lastPrintTime = 0;
 
-//temporary variable to measure main loops
-int temp_loops;
 
 //lqr stuff
 const uint8_t statesNumber = 4;
