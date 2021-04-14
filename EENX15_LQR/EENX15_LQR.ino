@@ -120,12 +120,15 @@ void loop() {
   }
 }
 void getSpeed() {
-  float alpha = 2.0 / (20.0 + 1.0); //alfa aka EMA length. 10 length = 20*20ms=0.2s
+  float alpha = 2.0 / (5.0 + 1.0); //alfa aka EMA length. 3 length = 3*80ms=0.24s
+  float rpm_const = 1071.43/fastTimer; //60000ms(1min) / ticks per rotation / fasttimer
+  float rps_const = 112.23/fastTimer; //1000ms(1s) / ticks per rotation / fasttimer
+  
   int ticks = countA-countAold;
-  float rpm_new = ticks*50*60/56.0; //ticks * 50 hz * 60s / ticks per rotation
-  float rps_new = ticks*50/8.91; //ticks * 50hz/ ticks per rad  
-  rpm = rpm*(1-alpha)+rpm_new*alpha;
-  rps = rps*(1-alpha)+rps_new*alpha;
+  float rpm_new = ticks*rpm_const;
+  float rps_new = ticks*rps_const;
+  rpm = rpm * (1-alpha) + rpm_new * alpha;
+  rps = rps * (1-alpha) + rps_new * alpha;
   countAold = countA;
 }
 void printInfo(){
