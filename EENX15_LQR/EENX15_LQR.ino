@@ -4,6 +4,8 @@
 int lastCorrectionTime = 0;
 int lastPrintTime = 0;
 
+static int fastTimer = 80;
+static int slowTimer = 800;
 
 //lqr stuff
 const uint8_t statesNumber = 4;
@@ -107,12 +109,12 @@ void loop() {
 
   int m = millis();
   
-  if (m - lastCorrectionTime >= 20) { //run this code ever 20ms (50hz)
+  if (m - lastCorrectionTime >= fastTimer) { //run this code ever 80ms (12.5hz)
     lastCorrectionTime = m;
     getSpeed();
     setSpeed();
   }
-  if (m - lastPrintTime >= 800) { //run this code ever 800ms (1.25hz)
+  if (m - lastPrintTime >= slowTimer) { //run this code ever 800ms (1.25hz)
     lastPrintTime = m;
     printInfo();
   }
