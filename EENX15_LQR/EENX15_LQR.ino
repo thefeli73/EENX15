@@ -119,8 +119,9 @@ void loop() {
     printInfo();
   }
 }
+
 void getSpeed() {
-  float alpha = 2.0 / (5.0 + 1.0); //alfa aka EMA length. 3 length = 3*80ms=0.24s
+  float alpha = 2.0 / (3.0 + 1.0); //Alpha aka EMA length. 3 length = 3*80ms=0.24s
   float rpm_const = 1071.43/fastTimer; //60000ms(1min) / ticks per rotation / fasttimer
   float rps_const = 112.23/fastTimer; //1000ms(1s) / ticks per rotation / fasttimer
   
@@ -131,6 +132,7 @@ void getSpeed() {
   rps = rps * (1-alpha) + rps_new * alpha;
   countAold = countA;
 }
+
 void printInfo(){
   Serial.println("");
   Serial.print("pitch Angle  = "); Serial.println(angle_pitch_output);
