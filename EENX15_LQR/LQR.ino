@@ -21,4 +21,3 @@ void lqr() {
   speed = speed*scaleConst;
  
 }
-

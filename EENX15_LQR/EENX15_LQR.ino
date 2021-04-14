@@ -1,11 +1,10 @@
 #include <Wire.h>
 
-
 int lastCorrectionTime = 0;
 int lastPrintTime = 0;
 
-static int fastTimer = 80;
-static int slowTimer = 800;
+static int fastTimer = 80; //ms
+static int slowTimer = 800; //ms
 
 //lqr stuff
 const uint8_t statesNumber = 4;
