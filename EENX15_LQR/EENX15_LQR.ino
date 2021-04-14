@@ -138,6 +138,7 @@ void printInfo(){
   Serial.print("pitch Angle abs = "); Serial.println(abs(safe_angle));
   Serial.print("pitch Angle measured = "); Serial.println(angle_pitch);
   Serial.print("Position: "); Serial.println(countA);
+  Serial.print("Position (m): "); Serial.println(countA/174.76); //r*2pi
   Serial.print("Full Rotations: "); Serial.println(countA/56.0); //ca. 56 tick per rotation
   Serial.print("Rads rotated: "); Serial.println(countA/8.91); //ca. 56 tick per rotation, 6.26 rads per rotation
   Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
