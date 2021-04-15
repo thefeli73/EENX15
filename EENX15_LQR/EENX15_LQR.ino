@@ -143,9 +143,6 @@ void printInfo(){
   Serial.print("Rads rotated: "); Serial.println(countA/8.91); //ca. 56 tick per rotation, 6.26 rads per rotation
   Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
   Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
-  
-  //Serial.print("A: "); Serial.println(countA);
-  //Serial.print("B: "); Serial.println(countB);
 }
 
 void setSpeed(){
