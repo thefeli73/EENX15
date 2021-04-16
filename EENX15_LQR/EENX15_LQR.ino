@@ -110,6 +110,7 @@ void loop() {
   
   if (m - lastCorrectionTime >= fastTimer) { //run this code ever 80ms (12.5hz)
     lastCorrectionTime = m;
+//    lqr();
     getSpeed();
     setSpeed();
   }
@@ -147,7 +148,11 @@ void printInfo(){
 
 void setSpeed(){
   if(abs(safe_angle)<50 ){
-    speed = 8*safe_angle;
+    //speed = 8*safe_angle;
+    float position_m = countA/174.76;
+    float angle_r = angle_pitch_output * 0.318;
+    speed = inputToControlSystem(position_m, angle_r);
+    speed *= 22;
     if(speed<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
@@ -162,7 +167,7 @@ void setSpeed(){
       speed = 0;
     }
     speed = abs(speed);
-    speed = constrain(speed, 0, 249);
+    speed = constrain(speed, 0, 250);
     analogWrite(MotorSpeedB, speed); //Wheel close to connections
     analogWrite(MotorSpeedA, speed); //First experiment wheel
   }
