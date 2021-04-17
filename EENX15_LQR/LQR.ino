@@ -1,5 +1,5 @@
 //LQR-stuff
-#include "Arduino_skal.h"
+//#include "Arduino_skal.h"
 
 // | ///////////////////////////////////
 // | //Row 24-52 in Arduino_skal_data.cpp
@@ -102,7 +102,7 @@ int inputToControlSystem(float position_m, float angle_r){
 // | ///////////////////////////////////
 // | //Row 215-225 in Arduino_skal.cpp
 // v ///////////////////////////////////
-
+/*
 void Arduino_skalModelClass::Arduino_skal_derivatives()
 {
   Arduino_skalModelClass::XDot *_rtXdot;
@@ -113,4 +113,4 @@ void Arduino_skalModelClass::Arduino_skal_derivatives()
   _rtXdot->Integrator1_CSTATE[1] = rtDW.Sum4[1];
   _rtXdot->Integrator1_CSTATE[2] = rtDW.Sum4[2];
   _rtXdot->Integrator1_CSTATE[3] = rtDW.Sum4[3];
-}
+}*/
