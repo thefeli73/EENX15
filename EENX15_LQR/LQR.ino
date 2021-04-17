@@ -90,27 +90,23 @@ int inputToControlSystem(float position_m, float angle_r){
             (Gain4_Gain[i + 4] * Integrator1_CSTATE[1] +
             Gain4_Gain[i] * Integrator1_CSTATE[0])));
   }
-  /*
-  Integrator1_CSTATE[0] = rtDW.Sum4[0];
-  Integrator1_CSTATE[1] = rtDW.Sum4[1];
-  Integrator1_CSTATE[2] = rtDW.Sum4[2];
-  Integrator1_CSTATE[3] = rtDW.Sum4[3];
-  */
+  
+  Arduino_skal_derivatives();
   return saturatedSignalToMotors();
 }
 
 // | ///////////////////////////////////
 // | //Row 215-225 in Arduino_skal.cpp
 // v ///////////////////////////////////
-/*
-void Arduino_skalModelClass::Arduino_skal_derivatives()
-{
-  Arduino_skalModelClass::XDot *_rtXdot;
+
+void Arduino_skal_derivatives()
+{/*
+  XDot *_rtXdot;
   _rtXdot = ((XDot *) (&rtM)->derivs);
 
   // Derivatives for Integrator: '<Root>/Integrator1'
   _rtXdot->Integrator1_CSTATE[0] = rtDW.Sum4[0];
   _rtXdot->Integrator1_CSTATE[1] = rtDW.Sum4[1];
   _rtXdot->Integrator1_CSTATE[2] = rtDW.Sum4[2];
-  _rtXdot->Integrator1_CSTATE[3] = rtDW.Sum4[3];
-}*/
+  _rtXdot->Integrator1_CSTATE[3] = rtDW.Sum4[3];*/
+}
