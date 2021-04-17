@@ -150,8 +150,7 @@ void setSpeed(){
     //speed = 8*safe_angle;
     float position_m = countA/174.76;
     float angle_r = angle_pitch_output * 0.318;
-    speed = inputToControlSystem(position_m, angle_r);
-    speed *= 22;
+    speed = 22 * inputToControlSystem(position_m, angle_r);
     if(speed<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
