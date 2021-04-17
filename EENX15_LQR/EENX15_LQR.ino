@@ -110,7 +110,6 @@ void loop() {
   
   if (m - lastCorrectionTime >= fastTimer) { //run this code ever 80ms (12.5hz)
     lastCorrectionTime = m;
-//    lqr();
     getSpeed();
     setSpeed();
   }
