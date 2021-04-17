@@ -156,7 +156,7 @@ class Arduino_skalModelClass {
       uint32_T clockTick0;
       time_T stepSize0;
       uint32_T clockTick1;
-      SimTimeStep simTimeStep;
+//      SimTimeStep simTimeStep;
       boolean_T stopRequestedFlag;
       time_T *t;
       time_T tArray[2];
