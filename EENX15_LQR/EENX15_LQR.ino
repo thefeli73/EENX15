@@ -100,6 +100,7 @@ void setup() {
   pinMode(MotorPinB, OUTPUT);
   pinMode(MotorSpeedB, OUTPUT);
   pinMode(MotorBrakeB, OUTPUT);
+
 }
  
 void loop() {
@@ -148,9 +149,10 @@ void printInfo(){
 void setSpeed(){
   if(abs(safe_angle)<50 ){
     //speed = 8*safe_angle;
-    float position_m = countA/174.76;
+    float position_m = -countA/174.76;
     float angle_r = angle_pitch_output * 0.318;
-    speed = 22 * inputToControlSystem(position_m, angle_r);
+    speed = -22 * inputToControlSystem(position_m, angle_r);
+    //speed = -22 * inputToControlSystem(0, 1);
     if(speed<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
