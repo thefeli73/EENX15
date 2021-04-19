@@ -8,39 +8,40 @@
   // Expression: A
   //  Referenced by: '<Root>/Gain4'
 
-const double Gain4_Gain [16] = { 0.0, 0.0, 0.0, 0.0, 
+const double matrix_A [16] = { 0.0, 0.0, 0.0, 0.0, 
   1.0, -0.20780947085442231, 0.0, -0.52810302415000854,
   0.0, 13.239785742831822, 0.0, 58.601480177829842, 
   0.0, 0.0, 1.0, 0.0 };
 
-//const double Gain4_Gain [16] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+//const double matrix_A [16] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 
   // Expression: C
   //  Referenced by: '<Root>/Gain6'
 
-const double Gain6_Gain [8] = { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
-//const double Gain6_Gain [8] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+const double matrix_C [8] = { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
+//const double matrix_C [8] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
   // Expression: L
   //  Referenced by: '<Root>/Gain2'
 
-const double Gain2_Gain [8] = { 116.63033952875418, 3387.8673967111704, -1.4473912197449676,
+const double matrix_L [8] = { 116.63033952875418, 3387.8673967111704, -1.4473912197449676,
     -115.34372132703447, -1.0534041975488044, -48.223441605702455,
     117.16185100039935, 3490.0480780568214 };
-//const double Gain2_Gain [8] = { 116.63033952875418, 338.78673967111704, -1.4473912197449676,
+//const double matrix_L [8] = { 116.63033952875418, 338.78673967111704, -1.4473912197449676,
 //    -115.34372132703447, -1.0534041975488044, -48.223441605702455,
 //    117.16185100039935, 34.900480780568214 };
 
   // Expression: B
   //  Referenced by: '<Root>/Gain3'
 
-const double Gain3_Gain [4] = { 0.0, 2.078094708544223, 0.0, 5.2810302415000852 };
+const double matrix_B [4] = { 0.0, 2.078094708544223, 0.0, 5.2810302415000852 };
 
 
 // | ///////////////////////////////////
 // | //Row 261-264 in Arduino_skal.cpp
 // v ///////////////////////////////////
 double Integrator1_CSTATE [4] = {0.0, 0.0, 0.0, 0.0};
+double Sum3[4];
 double Sum4[4];
 
 // | ///////////////////////////////////
@@ -77,10 +78,10 @@ double saturatedSignalToMotors(){
 double inputToControlSystem(float position_m, float angle_r){
   float posAndAng[] = {position_m, angle_r};
   for (int i = 0; i < 2; i++) {
-    tmp[i] = posAndAng[i] - (((Gain6_Gain[i + 2] *
-      Integrator1_CSTATE[1] + Gain6_Gain[i] *
-      Integrator1_CSTATE[0]) + Gain6_Gain[i + 4] *
-      Integrator1_CSTATE[2]) + Gain6_Gain[i + 6] *
+    tmp[i] = posAndAng[i] - (((matrix_C[i + 2] *
+      Integrator1_CSTATE[1] + matrix_C[i] *
+      Integrator1_CSTATE[0]) + matrix_C[i + 4] *
+      Integrator1_CSTATE[2]) + matrix_C[i + 6] *
       Integrator1_CSTATE[3]);
   }
 
@@ -92,18 +93,27 @@ double inputToControlSystem(float position_m, float angle_r){
     //   Gain: '<Root>/Gain4'
     //   Integrator: '<Root>/Integrator1'
     //   Sum: '<Root>/Sum3'
-
-    Sum4[i] = ((Gain2_Gain[i + 4] * tmp[1] + Gain2_Gain[i]
-            * tmp[0]) + Gain3_Gain[i] * rtb_Saturation) +
-            (Gain4_Gain[i + 12] * Integrator1_CSTATE[3] +
-            (Gain4_Gain[i + 8] * Integrator1_CSTATE[2] +
-            (Gain4_Gain[i + 4] * Integrator1_CSTATE[1] +
-            Gain4_Gain[i] * Integrator1_CSTATE[0])));
+  
+  
+    Sum3[i] = ((matrix_L[i + 4] * tmp[1] + matrix_L[i]
+            * tmp[0]) + matrix_B[i] * rtb_Saturation);
+      
+    Sum4[i] = Sum3[i] +
+            (matrix_A[i + 12] * Integrator1_CSTATE[3] +
+            (matrix_A[i + 8] * Integrator1_CSTATE[2] +
+            (matrix_A[i + 4] * Integrator1_CSTATE[1] +
+            matrix_A[i] * Integrator1_CSTATE[0])));
   }
+  Serial.print("Sum3 0 = "); Serial.println(Sum3[0]);
+  Serial.print("Sum3 1 = "); Serial.println(Sum3[1]);
+  Serial.print("Sum3 2 = "); Serial.println(Sum3[2]);
+  Serial.print("Sum3 3 = "); Serial.println(Sum3[3]);
+  
   Serial.print("Sum4 0 = "); Serial.println(Sum4[0]);
   Serial.print("Sum4 1 = "); Serial.println(Sum4[1]);
   Serial.print("Sum4 2 = "); Serial.println(Sum4[2]);
   Serial.print("Sum4 3 = "); Serial.println(Sum4[3]);
+  
   Arduino_skal_derivatives();
   return saturatedSignalToMotors();
 }
