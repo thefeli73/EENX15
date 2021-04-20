@@ -6,7 +6,8 @@ float lqr_fullstate(float position_m, float speed_ms, float angle_r, float angle
 //  const float matrix_K [4] = {-0.1054,   -0.6273,   23.5822,    3.1936};
 //  const float matrix_K [4] = {-0.1054,   -0.5273,   23.5546,    3.1876};
 //  const float matrix_K [4] = {-0.1054,   -0.5273,   23.5546,    3.1876};
-  const float matrix_K [4] = {-0.7071,   -1.5720,   26.0726,    3.7050};
+//  const float matrix_K [4] = {-0.7071,   -1.5720,   26.0726,    3.7050};
+  const float matrix_K [4] = {-0.7071,   -1.5980,   26.6081,    4.3220};
   
   float result;
   result = matrix_K[0] * position_m +
@@ -32,10 +33,11 @@ float calc_speed(float input) {
   float c = 90.75;
   float radps = a * pow(speed, b) + c; ////// the response graph
   */
-  float scale = 8;
-  input = abs(input)*0.30796*scale; // scale down to rad/s (78,53/255)
+  float scale = 1.5;
+  input = abs(input)*0.30796; // scale down to rad/s (78,53/255)
+  Serial.print("input: "); Serial.println(input); 
   float result = pow((3145.84/(90.75 - input)),1.00715); // break out x from response graph
-  
+  result *= scale;
   Serial.print("calcspeed: "); Serial.println(result); 
   return result;
   
