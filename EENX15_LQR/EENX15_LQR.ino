@@ -4,7 +4,7 @@ int lastCorrectionTime = 0;
 int lastPrintTime = 0;
 
 static int fastTimer = 80; //ms
-static int slowTimer = 800; //ms
+static int slowTimer = 1000; //ms
 
 //lqr stuff
 const uint8_t statesNumber = 4;
@@ -22,7 +22,7 @@ float motorAngularPosition = 0;
 float motorAngularSpeed = 0;
 
 /** PWM signal applied to the motor's driver 255 is 100% */
-int32_t speed;
+int speed;
 int safe_angle;
 
 
@@ -116,6 +116,7 @@ void loop() {
   }
   if (m - lastPrintTime >= slowTimer) { //run this code ever 800ms (1.25hz)
     lastPrintTime = m;
+    //set_test_speed();
     printInfo();
   }
 }
@@ -140,34 +141,48 @@ void printInfo(){
   Serial.print("pitch Angle measured = "); Serial.println(angle_pitch);
   Serial.print("Position: "); Serial.println(countA);
   Serial.print("Position (m): "); Serial.println(countA/174.76); //r*2pi
+  Serial.print("speed (m/s): "); Serial.println(rps * 0.05); //r*rads
   Serial.print("Full Rotations: "); Serial.println(countA/56.0); //ca. 56 tick per rotation
   Serial.print("Rads rotated: "); Serial.println(countA/8.91); //ca. 56 tick per rotation, 6.26 rads per rotation
   Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
   Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
 }
+/*
+int temp_counter = 0;
+void set_test_speed(){
+  speed = temp_counter;
+  speed = constrain(speed, 0, 255);
+  analogWrite(MotorSpeedB, speed); //Wheel close to connections
+  analogWrite(MotorSpeedA, speed); //First experiment wheel
+  Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
+  Serial.print("Speed: "); Serial.println(speed); //ca. 56 tick per rotation, 6.26 rads per rotation
 
+  temp_counter += 3;
+}
+*/
 void setSpeed(){
   if(abs(safe_angle)<50 ){
     //speed = 8*safe_angle;
-    float position_m = -countA/174.76;
+    float position_m = countA/174.76;
+    float speed_ms = rps * 0.05;
     float angle_r = angle_pitch_output * 0.318;
-    speed = -22 * inputToControlSystem(position_m, angle_r);
+    float angle_speed_rs = rps;
+    speed = lqr_fullstate(position_m, speed_ms, angle_r, angle_speed_rs)/ 0.022745; // (0.29/0.05)/255
     //speed = -22 * inputToControlSystem(0, 1);
     if(speed<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
-      speed -= 30;
     }
     else if(speed>0){
       digitalWrite(MotorPinB, CCW);
       digitalWrite(MotorPinA, CW);
-      speed += 30;
     }
     else {
       speed = 0;
     }
+    speed = calc_speed(speed);
     speed = abs(speed);
-    speed = constrain(speed, 0, 250);
+    speed = constrain(speed, 0, 255);
     analogWrite(MotorSpeedB, speed); //Wheel close to connections
     analogWrite(MotorSpeedA, speed); //First experiment wheel
   }
@@ -176,6 +191,7 @@ void setSpeed(){
     analogWrite(MotorSpeedB, speed);
     analogWrite(MotorSpeedA, speed);
   } 
+  Serial.print("Speed to motors: "); Serial.println(speed);
 }
 int directionA(){
   if(digitalRead(encoderA2) ==  HIGH){                             
