@@ -24,7 +24,9 @@ const double matrix_C [8] = { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
   // Expression: L
   //  Referenced by: '<Root>/Gain2'
 
-const double matrix_L [8] = { 116.63033952875418, 3387.8673967111704, -1.4473912197449676,
+const double matrix_L [8] = { 56.7847, 799.5294, -1.4914, -57.4160, 
+  -1.0363, -16.1071, 57.0075, 870.8172 };
+const double matrix_L_old [8] = { 116.63033952875418, 3387.8673967111704, -1.4473912197449676,
     -115.34372132703447, -1.0534041975488044, -48.223441605702455,
     117.16185100039935, 3490.0480780568214 };
 //const double matrix_L [8] = { 116.63033952875418, 338.78673967111704, -1.4473912197449676,
@@ -36,6 +38,9 @@ const double matrix_L [8] = { 116.63033952875418, 3387.8673967111704, -1.4473912
 
 const double matrix_B [4] = { 0.0, 2.078094708544223, 0.0, 5.2810302415000852 };
 
+
+const double matrix_K_old [4] = {-31.622776601683942,   -21.286439360075747,   80.789376267003959,    13.42463576551093};
+const double matrix_K [4] = {-0.0316,   -0.3938,   22.9455,    3.0629};
 
 // | ///////////////////////////////////
 // | //Row 261-264 in Arduino_skal.cpp
@@ -57,15 +62,15 @@ double rtb_Saturation = 0.0;
 
 // Denna funktion bör anropas när styrka + riktning till motorer ska bestämmas.
 double saturatedSignalToMotors(){
-  rtb_Saturation = ((-31.622776601683942 * Integrator1_CSTATE[0] +
-             -21.286439360075747 * Integrator1_CSTATE[1]) +
-             80.789376267003959 * Integrator1_CSTATE[2]) +
-             13.42463576551093 * Integrator1_CSTATE[3];
+  rtb_Saturation = ((matrix_K[0] * Integrator1_CSTATE[0] +
+             matrix_K[1] * Integrator1_CSTATE[1]) +
+             matrix_K[2] * Integrator1_CSTATE[2]) +
+             matrix_K[3] * Integrator1_CSTATE[3];
   
   if (0.0 - rtb_Saturation > 11.5) {
-    rtb_Saturation = 11.5;
+    rtb_Saturation = 3.0;
   } else if (0.0 - rtb_Saturation < -11.5) {
-    rtb_Saturation = -11.5;
+    rtb_Saturation = -3.0;
   } else {
     rtb_Saturation = 0.0 - rtb_Saturation;
   }
@@ -141,7 +146,7 @@ void Arduino_skal_derivatives()
 */
   // Derivatives for Integrator: '<Root>/Integrator1'
   for (int i = 0; i < 4; i++) {
-    Integrator1_CSTATE[i] = Sum4[i] * 80/1000.0;
+    Integrator1_CSTATE[i] = Sum4[i] * fastTimer/1000.0;
     Serial.print("Integrator: "); Serial.println(Integrator1_CSTATE[i]);
   }
 }
