@@ -114,7 +114,7 @@ void loop() {
     getSpeed();
     setSpeed();
   }
-  if (m - lastPrintTime >= slowTimer) { //run this code ever 800ms (1.25hz)
+  if (m - lastPrintTime >= slowTimer) { //run this code every
     lastPrintTime = m;
     //set_test_speed();
     printInfo();
@@ -150,7 +150,11 @@ void printInfo(){
 /*
 int temp_counter = 0;
 void set_test_speed(){
+  digitalWrite(MotorPinB, CCW);
+  digitalWrite(MotorPinA, CW);
   speed = temp_counter;
+  Serial.print("Speed pre calc: "); Serial.println(speed); //ca. 56 tick per rotation, 6.26 rads per rotation
+  speed = 3145.84/(pow((90.75 - speed),1.00715));
   speed = constrain(speed, 0, 255);
   analogWrite(MotorSpeedB, speed); //Wheel close to connections
   analogWrite(MotorSpeedA, speed); //First experiment wheel
