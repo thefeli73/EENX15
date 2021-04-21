@@ -37,7 +37,7 @@ float calc_speed(float input) {
   float scale = 1.5;
   input = abs(input)*0.30796; // scale down to rad/s (78,53/255)
   Serial.print("input: "); Serial.println(input); 
-  float result = pow((3145.84/(90.75 - input)),1.00715); // break out x from response graph
+  float result = 3145.84/(pow((90.75 - input),1.00715)); // break out x from response graph
   result *= scale;
   Serial.print("calcspeed: "); Serial.println(result); 
   return result;
