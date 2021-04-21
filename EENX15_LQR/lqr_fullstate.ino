@@ -7,7 +7,8 @@ float lqr_fullstate(float position_m, float speed_ms, float angle_r, float angle
 //  const float matrix_K [4] = {-0.1054,   -0.5273,   23.5546,    3.1876};
 //  const float matrix_K [4] = {-0.1054,   -0.5273,   23.5546,    3.1876};
 //  const float matrix_K [4] = {-0.7071,   -1.5720,   26.0726,    3.7050};
-  const float matrix_K [4] = {-0.7071,   -1.5980,   26.6081,    4.3220};
+//  const float matrix_K [4] = {-0.7071,   -1.5980,   26.6081,    4.3220};
+  const float matrix_K [4] = {-0.7071,   -1.7751,   34.5368,    4.8793};
   
   float result;
   result = matrix_K[0] * position_m +
