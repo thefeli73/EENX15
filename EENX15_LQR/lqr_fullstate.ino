@@ -15,7 +15,6 @@ float lqr_fullstate(float position_m, float speed_ms, float angle_r, float angle
            matrix_K[1] * speed_ms +
            matrix_K[2] * angle_r +
            matrix_K[3] * angle_speed_rs;
-  result *= 0.05;
   /*
   if (result > 0.29) {
     result = 0.29;
@@ -24,7 +23,7 @@ float lqr_fullstate(float position_m, float speed_ms, float angle_r, float angle
   } else {
     result = result;
   }*/
-  Serial.print("K calculation: "); Serial.println(result); 
+  Serial.print("K calculation (force): "); Serial.println(result); 
   return result;
 }
 float calc_speed(float input) {
