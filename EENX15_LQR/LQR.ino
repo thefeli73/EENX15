@@ -137,7 +137,6 @@ void Arduino_skal_derivatives()
   _rtXdot->Integrator1_CSTATE[1] = Sum4[1];
   _rtXdot->Integrator1_CSTATE[2] = Sum4[2];
   _rtXdot->Integrator1_CSTATE[3] = Sum4[3];
-
   
   Integrator1_CSTATE[0] = Sum4[0] * (fastTimer/1000.0);
   Integrator1_CSTATE[1] = Sum4[1] * (fastTimer/1000.0);

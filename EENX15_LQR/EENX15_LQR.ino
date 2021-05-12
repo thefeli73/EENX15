@@ -23,7 +23,10 @@ float motorAngularSpeed = 0;
 
 /** PWM signal applied to the motor's driver 255 is 100% */
 int speed;
+int Va;
 int safe_angle;
+float force;
+int PWM;
 
 
 //gyro stuff
@@ -160,7 +163,6 @@ void set_test_speed(){
   analogWrite(MotorSpeedA, speed); //First experiment wheel
   Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
   Serial.print("Speed: "); Serial.println(speed); //ca. 56 tick per rotation, 6.26 rads per rotation
-
   temp_counter += 3;
 }
 */
@@ -172,31 +174,27 @@ void setSpeed(){
     float angle_r = angle_pitch_output * 0.318;
     float angle_speed_rs = rps;
     //speed = lqr_fullstate(position_m, speed_ms, angle_r, angle_speed_rs);/// 0.019608; // (0.20*255)
-    speed = lqr_fullstate(0, 0, angle_r, 0);/// 0.019608; // (0.20*255)
+    force = lqr_fullstate(0, 0, angle_r, 0);/// 0.019608; // (0.20*255)
     //speed = -22 * inputToControlSystem(0, 1);
-    if(speed<0){
+    if(force<0){
       digitalWrite(MotorPinB, CW);
       digitalWrite(MotorPinA, CCW);
     }
-    else if(speed>0){
+    else if(force>0){
       digitalWrite(MotorPinB, CCW);
       digitalWrite(MotorPinA, CW);
     }
     else {
-      speed = 0;
+      force = 0;
     }
-    if(speed!=0){ speed = constrain(speed, -255, 255);speed = calc_speed(speed); }
-    speed = abs(speed);
-    speed = constrain(speed, 0, 255);
-    analogWrite(MotorSpeedB, speed); //Wheel close to connections
-    analogWrite(MotorSpeedA, speed); //First experiment wheel
-  }
-  else{
-    speed = 0;
-    analogWrite(MotorSpeedB, speed);
-    analogWrite(MotorSpeedA, speed);
+    if(force!=0){Va = calc_speed(force, angle_speed_rs); }
+    Va = abs(Va);
+    PWM = 255*Va/12;
+    PWM = constrain(PWM, 0, 255);
+    analogWrite(MotorSpeedB, PWM); //Wheel close to connections
+    analogWrite(MotorSpeedA, PWM); //First experiment wheel
   } 
-  Serial.print("Speed to motors: "); Serial.println(speed);
+  Serial.print("PWM to motors: "); Serial.println(PWM);
 }
 int directionA(){
   if(digitalRead(encoderA2) ==  HIGH){                             
