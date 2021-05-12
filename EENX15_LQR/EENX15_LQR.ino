@@ -23,7 +23,7 @@ float motorAngularSpeed = 0;
 
 /** PWM signal applied to the motor's driver 255 is 100% */
 int speed;
-int Va;
+float Va;
 int safe_angle;
 float force;
 int PWM;
@@ -187,7 +187,12 @@ void setSpeed(){
     else {
       force = 0;
     }
-    if(force!=0){Va = calc_speed(force, angle_speed_rs); }
+    if(force!=0){
+		Va = calc_speed(force, angle_speed_rs);
+	}
+	else {
+		Va = 0;
+	}
     Va = abs(Va);
     PWM = 255*Va/12;
     PWM = constrain(PWM, 0, 255);
