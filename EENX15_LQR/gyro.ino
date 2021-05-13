@@ -1,4 +1,4 @@
-//gyroscope stuff
+//gyro.ino
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 
@@ -16,7 +16,6 @@ void gyro_setup(){
   }
   Serial.println("MPU6050 Found!");
 
-  //mpu.setAccelerometerRange(MPU6050_RANGE_4_G);
   mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
   Serial.print("Accelerometer range set to: ");
   switch (mpu.getAccelerometerRange()) {
@@ -33,7 +32,6 @@ void gyro_setup(){
     Serial.println("+-16G");
     break;
   }
-  //mpu.setGyroRange(MPU6050_RANGE_500_DEG);
   mpu.setGyroRange(MPU6050_RANGE_2000_DEG);
   Serial.print("Gyro range set to: ");
   switch (mpu.getGyroRange()) {

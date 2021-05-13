@@ -1,3 +1,4 @@
+//EENX15_LQR.ino
 #include <Wire.h>
 
 int lastCorrectionTime = 0;
@@ -6,7 +7,7 @@ int lastPrintTime = 0;
 static int fastTimer = 10; //ms
 static int slowTimer = 1000; //ms
 
-//lqr stuff
+//lqr
 const uint8_t statesNumber = 4;
 /** Low pass filter angular Position*/
 float angularPositionLP = 0;
@@ -29,7 +30,7 @@ float force;
 int PWM;
 
 
-//gyro stuff
+//gyro
 float AccX, AccY, AccZ;
 float GyroX, GyroY, GyroZ;
 float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
@@ -50,7 +51,7 @@ float angle_pitch_output, angle_roll_output;
 long loop_timer;
 int temp;
 
-//motor stuff
+//motor
 #define encoderA1 2
 #define encoderB1 3
 
@@ -84,7 +85,7 @@ void setup() {
   Wire.begin();
   Serial.begin(115200);
   while (!Serial)
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+    delay(10); // will pause until serial console opens
   
   gyro_setup();
   
@@ -94,7 +95,6 @@ void setup() {
   pinMode(encoderA2, INPUT_PULLUP);
   pinMode(encoderB2, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(encoderA1), pulseA, RISING);
-  //attachInterrupt(digitalPinToInterrupt(encoderB1), pulseB, RISING);
   
   pinMode(MotorPinA, OUTPUT);
   pinMode(MotorSpeedA, OUTPUT);
@@ -112,14 +112,13 @@ void loop() {
 
   int m = millis();
   
-  if (m - lastCorrectionTime >= fastTimer) { //run this code ever 80ms (12.5hz)
+  if (m - lastCorrectionTime >= fastTimer) { //run this code every [fastTimer]ms
     lastCorrectionTime = m;
     getSpeed();
     setSpeed();
   }
-  if (m - lastPrintTime >= slowTimer) { //run this code every
+  if (m - lastPrintTime >= slowTimer) { //run this code every [slowTimer]ms
     lastPrintTime = m;
-    //set_test_speed();
     printInfo();
   }
 }
@@ -150,25 +149,9 @@ void printInfo(){
   Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
   Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
 }
-/*
-int temp_counter = 0;
-void set_test_speed(){
-  digitalWrite(MotorPinB, CCW);
-  digitalWrite(MotorPinA, CW);
-  speed = temp_counter;
-  Serial.print("Speed pre calc: "); Serial.println(speed); //ca. 56 tick per rotation, 6.26 rads per rotation
-  speed = 3145.84/(pow((90.75 - speed),1.00715));
-  speed = constrain(speed, 0, 255);
-  analogWrite(MotorSpeedB, speed); //Wheel close to connections
-  analogWrite(MotorSpeedA, speed); //First experiment wheel
-  Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
-  Serial.print("Speed: "); Serial.println(speed); //ca. 56 tick per rotation, 6.26 rads per rotation
-  temp_counter += 3;
-}
-*/
+
 void setSpeed(){
   if(abs(safe_angle)<50 ){
-    //speed = 8*safe_angle;
     float position_m = countA/174.76;
     float speed_ms = rps * 0.05;
     float angle_r = angle_pitch_output * 0.318;
