@@ -7,7 +7,7 @@ int lastPrintTime = 0;
 static int fastTimer = 80; //ms
 static int slowTimer = 800; //ms
 
-//lqr stuff
+//lqr
 const uint8_t statesNumber = 4;
 /** Low pass filter angular Position*/
 float angularPositionLP = 0;
