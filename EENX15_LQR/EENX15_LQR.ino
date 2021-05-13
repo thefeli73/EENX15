@@ -1,3 +1,4 @@
+//EENX15_LQR.ino
 #include <Wire.h>
 
 int lastCorrectionTime = 0;
@@ -26,7 +27,7 @@ int32_t speed;
 int safe_angle;
 
 
-//gyro stuff
+//gyro
 float AccX, AccY, AccZ;
 float GyroX, GyroY, GyroZ;
 float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
@@ -47,7 +48,7 @@ float angle_pitch_output, angle_roll_output;
 long loop_timer;
 int temp;
 
-//motor stuff
+//motor
 #define encoderA1 2
 #define encoderB1 3
 
@@ -81,7 +82,7 @@ void setup() {
   Wire.begin();
   Serial.begin(115200);
   while (!Serial)
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+    delay(10); // will pause until serial console opens
   
   gyro_setup();
   
@@ -91,7 +92,6 @@ void setup() {
   pinMode(encoderA2, INPUT_PULLUP);
   pinMode(encoderB2, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(encoderA1), pulseA, RISING);
-  //attachInterrupt(digitalPinToInterrupt(encoderB1), pulseB, RISING);
   
   pinMode(MotorPinA, OUTPUT);
   pinMode(MotorSpeedA, OUTPUT);
@@ -143,9 +143,6 @@ void printInfo(){
   Serial.print("Rads rotated: "); Serial.println(countA/8.91); //ca. 56 tick per rotation, 6.26 rads per rotation
   Serial.print("RPM: "); Serial.println(rpm); //ca. 56 tick per rotation
   Serial.print("Rads per second: "); Serial.println(rps); //ca. 56 tick per rotation, 6.26 rads per rotation
-  
-  //Serial.print("A: "); Serial.println(countA);
-  //Serial.print("B: "); Serial.println(countB);
 }
 
 void setSpeed(){
@@ -166,8 +163,8 @@ void setSpeed(){
     }
     speed = abs(speed);
     speed = constrain(speed, 0, 249);
-    analogWrite(MotorSpeedB, speed); //Wheel close to connections
-    analogWrite(MotorSpeedA, speed); //First experiment wheel
+    analogWrite(MotorSpeedB, speed);
+    analogWrite(MotorSpeedA, speed);
   }
   else{
     speed = 0;
